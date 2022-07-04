@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import Breadcrumb from "../layout/Breadcrumb";
+import validator from "validator";
 
 import { useAddSupplierMutation } from "../../services/supplier";
 
@@ -23,8 +24,13 @@ function Supplier() {
 
   const validate = (values) => {
     const errors = {};
+
     if (!values.name) {
       errors.name = "Name is required!";
+    }
+
+    if (!values.website.length > 0 && !validator.isURL(values.website)) {
+      errors.website = "Website is not valid!";
     }
 
     return errors;
@@ -96,13 +102,18 @@ function Supplier() {
                   </label>
                   <div className="mt-1">
                     <input
-                      type="url"
+                      type="text"
                       name="website"
                       id="website"
                       className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
                       onChange={formik.handleChange}
                       value={formik.values.website}
                     />
+                    {formik.errors.website ? (
+                      <span className="text-red-600 text-sm">
+                        {formik.errors.website}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 
